@@ -49,7 +49,7 @@ public class Repository_HDCT {
         sql = "select magioHangTamthoi, masanpham, dongia, soluong, imei from GioHangTamThoi where mahoadon = ?";
 
         try {
-            double thanhTien=0;
+            double thanhTien = 0;
             con = DBConnect.DBConnect_Phuong.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, maHD); // Đảm bảo truyền tham số vào câu lệnh SQL
@@ -62,7 +62,7 @@ public class Repository_HDCT {
                 double donGia = rs.getDouble(3);
                 int soLuong = rs.getInt(4);
                 String cpu = rs.getString(5);
-                thanhTien+=donGia;
+                thanhTien += donGia;
 
                 Model_SanPham sp = new Model_SanPham(maSanPham, soLuong, donGia, cpu, soLuong);
 
@@ -78,15 +78,15 @@ public class Repository_HDCT {
             return null;
         }
     }
-    
-    public ArrayList<Model.Model_HDCT> getAll(){
+
+    public ArrayList<Model.Model_HDCT> getAll() {
         ArrayList<Model.Model_HDCT> list_HDCT = new ArrayList<>();
         sql = "select mahoadonct, mahoadon, masanpham, imei, dongia, soluong from HoaDonChiTiet";
         try {
             con = DBConnect.DBConnect_Phuong.getConnection();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 int maHDCT = rs.getInt(1);
                 String maHD = rs.getString(2);
                 String maSP = rs.getString(3);
@@ -102,8 +102,8 @@ public class Repository_HDCT {
             return null;
         }
     }
-    
-    public ArrayList<Model.Model_HDCT> timkiemHDCT(String maHDcantim){
+
+    public ArrayList<Model.Model_HDCT> timkiemHDCT(String maHDcantim) {
         ArrayList<Model.Model_HDCT> list_HDCT = new ArrayList<>();
         sql = "select mahoadonct, mahoadon, masanpham, imei, dongia, soluong from HoaDonChiTiet where mahoadon = ?";
         try {
@@ -111,7 +111,7 @@ public class Repository_HDCT {
             ps = con.prepareStatement(sql);
             ps.setObject(1, maHDcantim);
             rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 int maHDCT = rs.getInt(1);
                 String maHD = rs.getString(2);
                 String maSP = rs.getString(3);
@@ -125,6 +125,46 @@ public class Repository_HDCT {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void ThemHDCT(ArrayList<Model_SanPham> danhSachSanPham,String maHD) {
+        try {
+            // SQL câu lệnh insert
+            sql = "INSERT INTO HoaDonChiTiet(soLuong, dongia, mahoadon, imei, masanpham) VALUES (?,?,?,?,?)";
+
+            // Kết nối cơ sở dữ liệu
+            con = DBConnect.DBConnect_Cong.getConnection();
+            ps = con.prepareStatement(sql);
+
+            // Thực hiện batch insert
+            for (Model_SanPham sp : danhSachSanPham) {
+                ps.setObject(1, 1);  
+                ps.setObject(2, sp.getGia());           
+                ps.setObject(3, maHD);           
+                ps.setObject(4, sp.getCpu());          
+                ps.setObject(5, sp.getMaSP());           
+
+                ps.addBatch();  // Thêm câu lệnh vào batch
+            }
+
+            // Thực thi batch
+            ps.executeBatch();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            // Đảm bảo đóng kết nối sau khi thực thi xong
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -54,17 +54,33 @@ FROM INSERTED;
     where mahoadon =@MaHoaDonInsert
 
 END;
-INSERT INTO HoaDon (mahoadon,id_nhanvien)
-VALUES ('He3','NV005');  -- Chỉ cần id_nhanvien
+select * from HoaDon
+select *from HoaDonChiTiet
+ALTER TABLE Voucher
+ADD PhanTramGiamGia INT;
 
-select *from HoaDon
-select * from KhachHang
-select makhachhang,ten from KhachHang where sodienthoai =?
-update HoaDon
-set makhachhang =?
-where ma=?
+DROP TRIGGER trg_UpdateTrangThaiHoaDon;
+--xoatrigger
+--cap nhat trang thai hoa don tu gio hang
+CREATE TRIGGER trg_UpdateTrangThaiHoaDon
+ON HoaDonChiTiet
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @maHoaDon varchar(10) ;
+
+    -- Lấy mã hóa đơn từ bản ghi vừa chèn
+    SELECT @maHoaDon = maHoaDon FROM inserted;
+
+    
+        -- Cập nhật trạng thái của hóa đơn sang "Đã hoàn tất"
+        UPDATE HoaDon
+        SET trangThai = 1
+        WHERE maHoaDon = @maHoaDon;
+    END
 
 
+select *from KhachHang
 
 -- IMEI cho sản phẩm SP001
 INSERT INTO Imei (imei, trangthai, masp) VALUES
