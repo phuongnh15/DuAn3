@@ -219,7 +219,7 @@ public class Repository_HoaDon {
     public void ThemMaKH(String maHD,String maKh) {
         sql = "update HoaDon\n"
                 + "set makhachhang =?\n"
-                + "where ma=?";
+                + "where mahoadon=?";
         try {
             con=DBConnect.DBConnect_Cong.getConnection();
             ps=con.prepareStatement(sql);

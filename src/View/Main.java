@@ -59,7 +59,7 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         });
-        setForm(new Form_NhanVien());
+        setForm(new Form_BH());
     }
 
     /**

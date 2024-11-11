@@ -48,35 +48,82 @@ public class repository_KhachHang {
     }
 
     public String[] getThongTinKH(String sdt) {
-    String[] thongTinKH = null; // Khởi tạo mảng trả về
-    query = "SELECT makhachhang, ten FROM KhachHang WHERE sodienthoai = ?";
-    conn = DBConnect_Cong.getConnection();
+        String[] thongTinKH = null; // Khởi tạo mảng trả về
+        query = "SELECT makhachhang, ten FROM KhachHang WHERE sodienthoai = ?";
+        conn = DBConnect_Cong.getConnection();
 
-    try {
-        pr = conn.prepareStatement(query);
-        pr.setObject(1, sdt);
-
-        rs = pr.executeQuery();
-        if (rs.next()) { 
-            thongTinKH = new String[2]; 
-            thongTinKH[0] = rs.getString("makhachhang"); 
-            thongTinKH[1] = rs.getString("ten"); 
-        }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, e.getMessage());
-    } finally {
-        // Đóng kết nối sau khi truy vấn xong
         try {
-            if (rs != null) rs.close();
-            if (pr != null) pr.close();
-            if (conn != null) conn.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            pr = conn.prepareStatement(query);
+            pr.setObject(1, sdt);
+
+            rs = pr.executeQuery();
+            if (rs.next()) {
+                thongTinKH = new String[2];
+                thongTinKH[0] = rs.getString("makhachhang");
+                thongTinKH[1] = rs.getString("ten");
+            }
+        } catch (SQLException e) {
+          
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            // Đóng kết nối sau khi truy vấn xong
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pr != null) {
+                    pr.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
         }
+
+        return thongTinKH; // Trả về mảng kết quả
     }
 
-    return thongTinKH; // Trả về mảng kết quả
-}
+    public String[] getMaKh_TenKh(String maHoaDon) {
+        String[] thongTinKH = null; 
+        query = "SELECT HoaDon.makhachhang, ten "
+                + "FROM HoaDon "
+                + "JOIN KhachHang ON HoaDon.makhachhang = KhachHang.makhachhang "
+                + "WHERE mahoadon = ?";
+        conn = DBConnect_Cong.getConnection();
 
+        try {
+            pr = conn.prepareStatement(query);
+            pr.setObject(1, maHoaDon);
+
+            rs = pr.executeQuery();
+            if (rs.next()) {
+                thongTinKH = new String[2];
+                thongTinKH[0] = rs.getString("makhachhang");
+                thongTinKH[1] = rs.getString("ten");
+            }
+        } catch (SQLException e) {
+            thongTinKH = null; 
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            // Đóng kết nối sau khi truy vấn xong
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pr != null) {
+                    pr.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }
+
+        return thongTinKH; 
+    }
 
 }

@@ -12,6 +12,8 @@ import Repository.reponsitory_SanPham;
 import Repository.reponsitory_getImei;
 import Repository.repository_KhachHang;
 import com.google.zxing.qrcode.decoder.Mode;
+import form.Form_ThongTinKH;
+import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -32,9 +34,9 @@ public class Form_BH extends javax.swing.JPanel {
     DefaultTableModel model_GioHang;
     private reponsitory_SanPham rp = new reponsitory_SanPham();
     private reponsitory_getImei rpImei = new reponsitory_getImei();
-    private  Repository_HoaDon rpHD =new Repository_HoaDon();
-    private  Repository_HDCT rpHDCT =new Repository_HDCT();
-    private  repository_KhachHang rpKH =new repository_KhachHang();
+    private Repository_HoaDon rpHD = new Repository_HoaDon();
+    private Repository_HDCT rpHDCT = new Repository_HDCT();
+    private repository_KhachHang rpKH = new repository_KhachHang();
 
     public Form_BH() {
         initComponents();
@@ -301,6 +303,11 @@ public class Form_BH extends javax.swing.JPanel {
                 btn_ThemMoiKHMouseClicked(evt);
             }
         });
+        btn_ThemMoiKH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ThemMoiKHActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -376,6 +383,11 @@ public class Form_BH extends javax.swing.JPanel {
         lbl_TenNhanVien.setText("tenNV");
 
         cbo_MaGiamGia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbo_MaGiamGia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbo_MaGiamGiaActionPerformed(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel13.setText("Tiền giảm giá: ");
@@ -573,20 +585,20 @@ public class Form_BH extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-    
-    void fillHoaDOnCho(ArrayList<Model_HoaDon> ds){
-        
-        model_HoaDon=(DefaultTableModel) tbl_hoadon.getModel();
+
+    void fillHoaDOnCho(ArrayList<Model_HoaDon> ds) {
+
+        model_HoaDon = (DefaultTableModel) tbl_hoadon.getModel();
         model_HoaDon.setRowCount(0);
         for (Model_HoaDon d : ds) {
             model_HoaDon.addRow(d.toDataHoaDonCho());
         }
-        
+
     }
     private void btn_HoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_HoaDonActionPerformed
         // TODO add your handling code here:
-        String maHd=lbl_MaNV.getText();
-        String maNV=lbl_MaNV.getText();
+        String maHd = lbl_MaNV.getText();
+        String maNV = lbl_MaNV.getText();
         rpHD.getChoHoaDon(maHd, maNV);
         fillHoaDOnCho(rpHD.getAllChoHoaDonTT());
     }//GEN-LAST:event_btn_HoaDonActionPerformed
@@ -597,13 +609,13 @@ public class Form_BH extends javax.swing.JPanel {
 
     public String getImei() {
         int i = tbl_DSSP.getSelectedRow();
-        String getMaIemi=null;
+        String getMaIemi = null;
         String maImei = tbl_DSSP.getValueAt(i, 0).toString();
 
         if (i != -1) {
 
             System.out.println("Mã sản phẩm được chọn: " + maImei); // Debug mã sản phẩm
-          getMaIemi =   openImeiDialog(maImei);
+            getMaIemi = openImeiDialog(maImei);
         }
         return getMaIemi;
     }
@@ -611,80 +623,127 @@ public class Form_BH extends javax.swing.JPanel {
     private String openImeiDialog(String productId) {
         System.out.println("Đang mở IMEI dialog cho sản phẩm: " + productId);
         ImeiDialog imeiDialog = new ImeiDialog(null, productId);
-       
+
         imeiDialog.setVisible(true); // Hiển thị dialog
-         return imeiDialog.selectedImei;
+        return imeiDialog.selectedImei;
     }
-    
-    Model_SanPham readForm_GioHang(int i){
-        
-        String maSp=tbl_DSSP.getValueAt(i, 0).toString();
-        int soLuong=1;
-        double donGia=Double.parseDouble(tbl_DSSP.getValueAt(i, 2).toString());
-        String Imei=getImei();
-        String maHD=lbl_MaHD.getText();
-        Model_SanPham sp=new Model_SanPham(maSp, Imei, soLuong, donGia, maHD);
+
+    Model_SanPham readForm_GioHang(int i) {
+
+        String maSp = tbl_DSSP.getValueAt(i, 0).toString();
+        int soLuong = 1;
+        double donGia = Double.parseDouble(tbl_DSSP.getValueAt(i, 2).toString());
+        String Imei = getImei();
+        String maHD = lbl_MaHD.getText();
+        Model_SanPham sp = new Model_SanPham(maSp, Imei, soLuong, donGia, maHD);
         return sp;
     }
-    void getAllGiohangtb(ArrayList<Model_SanPham> sp){
-        model_GioHang=(DefaultTableModel) tbl_GioHang.getModel();
+
+    void getAllGiohangtb(ArrayList<Model_SanPham> sp) {
+        model_GioHang = (DefaultTableModel) tbl_GioHang.getModel();
         model_GioHang.setRowCount(0);
-        double tongTien=0;
+        double tongTien = 0;
         for (Model_SanPham model_SanPham : sp) {
-           model_GioHang.addRow((Object[]) model_SanPham.toData_GioHang());
-           tongTien+=model_SanPham.getGia();
+            model_GioHang.addRow((Object[]) model_SanPham.toData_GioHang());
+            tongTien += model_SanPham.getGia();
         }
-        lbl_TongTien.setText(tongTien+"VND");
+        lbl_TongTien.setText(tongTien + "VND");
     }
     private void tbl_DSSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_DSSPMouseClicked
         // TODO add your handling code here:
-        int i=tbl_DSSP.getSelectedRow();
+        int i = tbl_DSSP.getSelectedRow();
         rpHDCT.ThemGioHang(readForm_GioHang(i));
-       
+
         getAllGiohangtb(rpHDCT.getAllGioHangTamThoi(lbl_MaHD.getText()));
-        
 
 
     }//GEN-LAST:event_tbl_DSSPMouseClicked
-    void getMaHoaDon(){
-        int i=tbl_hoadon.getSelectedRow();
-        String maHD=tbl_hoadon.getValueAt(i, 1).toString();
+    void getMaHoaDon() {
+        int i = tbl_hoadon.getSelectedRow();
+        String maHD = tbl_hoadon.getValueAt(i, 1).toString();
         lbl_MaHD.setText(maHD);
     }
     private void tbl_hoadonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_hoadonMouseClicked
-        // TODO add your handling code here:
+        // Lấy mã hóa đơn
         getMaHoaDon();
-         getAllGiohangtb(rpHDCT.getAllGioHangTamThoi(lbl_MaHD.getText()));
+
+        // Gọi phương thức để lấy thông tin khách hàng
+        String[] thongTinKH = rpKH.getMaKh_TenKh(lbl_MaHD.getText());
+
+        // Kiểm tra mảng trả về có phải null không
+        if (thongTinKH != null && thongTinKH[0] != null) {
+            lbl_MaKH.setText(thongTinKH[0]); // Mã khách hàng
+            lbl_TenKH.setText(thongTinKH[1]); // Tên khách hàng
+        } else {
+            lbl_MaKH.setText(""); // Nếu không có thông tin, đặt trống
+            lbl_TenKH.setText("");
+        }
+
+        // Hiển thị giỏ hàng tạm thời
+        getAllGiohangtb(rpHDCT.getAllGioHangTamThoi(lbl_MaHD.getText()));
+        //kiemtra lay Voucher
+        
     }//GEN-LAST:event_tbl_hoadonMouseClicked
 
     private void tbl_GioHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_GioHangMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tbl_GioHangMouseClicked
 
-    String  timKiemKH(){
-        String sdt=txt_SDT_KH.getText();
-        if(sdt.isEmpty()){
+    String timKiemKH() {
+        String sdt = txt_SDT_KH.getText();
+        if (sdt.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số điện thoại!");
             return null;
         }
         return sdt;
     }
     private void btn_TimKiem_SDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_TimKiem_SDTActionPerformed
-        
-        if(timKiemKH()!=null){
+
+        if (timKiemKH() != null) {
             rpKH.getThongTinKH(timKiemKH());
-            lbl_MaKH.setText( rpKH.getThongTinKH(timKiemKH())[0]);
-            lbl_TenKH.setText( rpKH.getThongTinKH(timKiemKH())[1]);
+            lbl_MaKH.setText(rpKH.getThongTinKH(timKiemKH())[0]);
+            lbl_TenKH.setText(rpKH.getThongTinKH(timKiemKH())[1]);
         }
-        
+        txt_SDT_KH.setText("");
+
     }//GEN-LAST:event_btn_TimKiem_SDTActionPerformed
 
     private void btn_ThemMoiKHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_ThemMoiKHMouseClicked
         // TODO add your handling code here:
-        if(lbl_MaKH.getText()!=null){
-            rpHD.ThemMaKH(lbl_MaHD.getText(), lbl_MaKH.getText());
-        }
+
     }//GEN-LAST:event_btn_ThemMoiKHMouseClicked
+
+    private void btn_ThemMoiKHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThemMoiKHActionPerformed
+        // Kiểm tra nếu mã khách hàng không có giá trị (null hoặc rỗng)
+        if (lbl_MaKH.getText() != null && !lbl_MaKH.getText().isEmpty()) {
+            rpHD.ThemMaKH(lbl_MaHD.getText(), lbl_MaKH.getText());
+            JOptionPane.showMessageDialog(null, "Cập nhật thông tin khách hàng vào hóa đơn thành công!");
+        } else {
+            // Nếu mã khách hàng là null hoặc rỗng, hiển thị hộp thoại xác nhận
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    "Bạn có muốn thêm mới khách hàng không?",
+                    "Xác nhận",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+            if (result == JOptionPane.YES_OPTION) {
+                // Lấy vị trí của nút bấm
+                Form_ThongTinKH ttKh = new Form_ThongTinKH();
+                Point btnLocation = btn_ThemMoiKH.getLocationOnScreen();
+
+                 int offsetX = 280; // Điều chỉnh mức độ lệch sang trái (50 pixel)
+            ttKh.setLocation(btnLocation.x - offsetX, btnLocation.y+50 + btn_ThemMoiKH.getHeight());
+
+                // Hiển thị form
+                ttKh.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_btn_ThemMoiKHActionPerformed
+
+    private void cbo_MaGiamGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbo_MaGiamGiaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbo_MaGiamGiaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
