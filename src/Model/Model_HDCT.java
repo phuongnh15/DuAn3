@@ -73,6 +73,9 @@ public class Model_HDCT {
     public void setDongia(double dongia) {
         this.dongia = dongia;
     }
+    public Object[] ToDataRow(){
+        return new Object[] {this.getMaHDCT(), this.getMaHD(), this.getMaSP(), this.getImei(), this.getDongia(), this.getSolg()};
+    }
     
     
 }

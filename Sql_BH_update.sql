@@ -58,9 +58,11 @@ INSERT INTO HoaDon (mahoadon,id_nhanvien)
 VALUES ('He3','NV005');  -- Chỉ cần id_nhanvien
 
 select *from HoaDon
-
-
-
+select * from KhachHang
+select makhachhang,ten from KhachHang where sodienthoai =?
+update HoaDon
+set makhachhang =?
+where ma=?
 
 
 
