@@ -216,16 +216,42 @@ public class Repository_HoaDon {
     }
 
     //update maKh vao hoa don 
-    public void ThemMaKH(String maHD,String maKh) {
+    public void ThemMaKH(String maHD, String maKh) {
         sql = "update HoaDon\n"
                 + "set makhachhang =?\n"
                 + "where mahoadon=?";
         try {
-            con=DBConnect.DBConnect_Cong.getConnection();
-            ps=con.prepareStatement(sql);
+            con = DBConnect.DBConnect_Cong.getConnection();
+            ps = con.prepareStatement(sql);
             ps.setObject(1, maKh);
             ps.setObject(2, maHD);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+
+    public void CapNhatHoaDonThanToan(Model_HoaDon hd,String maHD ) {
+        sql = "UPDATE HoaDon SET tongtienBanDau = ?, tongkhuyenmai = ?, tongTiensauKM = ?, maVoucher = ? WHERE mahoadon = ?";
+        try {
+            con = DBConnect.DBConnect_Cong.getConnection();
+            ps = con.prepareStatement(sql);
+
+            // Thiết lập các giá trị từ đối tượng Model_HoaDon
+            ps.setObject(1, hd.getTongtienBD());
+            ps.setObject(2, hd.getTongKM());
+            ps.setObject(3, hd.getTongtiensauKM());
+            ps.setObject(4, hd.getMaVoucher());
+          
+            ps.setObject(5, maHD);   
+
+            // Thực hiện cập nhật
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Cập nhật hóa đơn thành công!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật.");
+            }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }

@@ -81,7 +81,7 @@ BEGIN
 
 
 select *from KhachHang
-
+select * from HoaDon
 -- IMEI cho sản phẩm SP001
 INSERT INTO Imei (imei, trangthai, masp) VALUES
 ('IMEI00101', 1, 'SP001'),

@@ -36,6 +36,14 @@ public class Model_HoaDon {
         return id;
     }
 
+    public Model_HoaDon(String maVoucher, double tongtienBD, double tongKM, double tongtiensauKM) {
+        this.maVoucher = maVoucher;
+        this.tongtienBD = tongtienBD;
+        this.tongKM = tongKM;
+        this.tongtiensauKM = tongtiensauKM;
+    }
+    
+
     public void setId(int id) {
         this.id = id;
     }

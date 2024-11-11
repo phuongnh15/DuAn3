@@ -6,6 +6,7 @@ package View.form;
 
 import Model.Model_HoaDon;
 import Model.Model_SanPham;
+import Model.Model_Vourcher;
 import Repository.Repository_HDCT;
 import Repository.Repository_HoaDon;
 import Repository.Repository_Vourcher;
@@ -789,9 +790,9 @@ public class Form_BH extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-        int i=tbl_hoadon.getSelectedRow();
-         String maNV = tbl_hoadon.getValueAt(i, 3).toString();
-         lbl_maNhanVien.setText(maNV);
+        int i = tbl_hoadon.getSelectedRow();
+        String maNV = tbl_hoadon.getValueAt(i, 3).toString();
+        lbl_maNhanVien.setText(maNV);
     }//GEN-LAST:event_tbl_hoadonMouseClicked
 
     private void tbl_GioHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_GioHangMouseClicked
@@ -895,19 +896,54 @@ public class Form_BH extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_cbo_MaGiamGiaMouseClicked
+    void xoaTrang() {
+        lbl_MaHD.setText("");
+
+        lbl_TenKH.setText("");
+        lbl_MaKH.setText("");
+        lbl_TongTien.setText("");
+        lbl_TongTien_sauKM.setText("");
+        lbl_Voucher_giamgiaCaoNhat.setText("");
+        lbl_maNhanVien.setText("");
+        lbl_tienGiamGia.setText("");
+    }
+
+    Model_HoaDon capNhatlaiHoaDon() {
+        // Lấy giá trị từ các JLabel và loại bỏ các ký tự không mong muốn
+        String tongTienStr = lbl_TongTien.getText().replace(",", "").replace(".", "");
+        String tongTienKMStr = lbl_tienGiamGia.getText().replace(",", "").replace(".", "");
+        String tongTiensauKMStr = lbl_TongTien_sauKM.getText().replace(",", "").replace(".", "");
+        String maVoucher = null;
+        if (cbo_MaGiamGia.getItemCount() != 0) {
+            maVoucher = cbo_MaGiamGia.getSelectedItem().toString();
+
+        }
+
+        // Chuyển đổi chuỗi thành số
+        double tongTienDB = Double.parseDouble(tongTienStr);
+        double tongKM = Double.parseDouble(tongTienKMStr);
+        double tongTiensauKM = Double.parseDouble(tongTiensauKMStr);
+
+        return new Model_HoaDon(maVoucher, tongTienDB, tongKM, tongTiensauKM);
+    }
 
     private void btn_ThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThanhToanActionPerformed
         // TODO add your handling code here:
-        int i=tbl_hoadon.getSelectedRow();
-        if(i<0){
+        int i = tbl_hoadon.getSelectedRow();
+        if (i < 0) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn cần thanh toán!");
         }
-        String maHD=tbl_hoadon.getValueAt(i, 1).toString();
+        String maHD = tbl_hoadon.getValueAt(i, 1).toString();
         rpHDCT.getAllGioHangTamThoi(maHD);
-        rpHDCT.ThemHDCT(rpHDCT.getAllGioHangTamThoi(maHD),maHD);
-        
+        rpHDCT.ThemHDCT(rpHDCT.getAllGioHangTamThoi(maHD), maHD);
+
         JOptionPane.showConfirmDialog(null, "Bạn có muốn in hóa đơn không?");
         fillHoaDOnCho(rpHD.getAllChoHoaDonTT());
+        ///Cap nhat hoa don vao bang hoa don
+        rpHD.CapNhatHoaDonThanToan(capNhatlaiHoaDon(), maHD);
+        //xoa trang
+        
+        xoaTrang();
     }//GEN-LAST:event_btn_ThanhToanActionPerformed
 
 

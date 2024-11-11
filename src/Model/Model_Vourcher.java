@@ -105,6 +105,7 @@ public class Model_Vourcher {
         this.ngayKT = ngayKT;
     }
     
+    
     public Object[] toDatarow(){
         return new Object[]{getMa(),getMoTa(),getGiamToiDa(),getNgayBD(),getNgayKT(),getGiamGia()};
     }
