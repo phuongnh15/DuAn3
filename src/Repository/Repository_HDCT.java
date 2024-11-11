@@ -48,6 +48,7 @@ public class Repository_HDCT {
         sql = "select magioHangTamthoi, masanpham, dongia, soluong, imei from GioHangTamThoi where mahoadon = ?";
 
         try {
+            double thanhTien=0;
             con = DBConnect.DBConnect_Phuong.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, maHD); // Đảm bảo truyền tham số vào câu lệnh SQL
@@ -60,6 +61,7 @@ public class Repository_HDCT {
                 double donGia = rs.getDouble(3);
                 int soLuong = rs.getInt(4);
                 String cpu = rs.getString(5);
+                thanhTien+=donGia;
 
                 Model_SanPham sp = new Model_SanPham(maSanPham, soLuong, donGia, cpu, soLuong);
 

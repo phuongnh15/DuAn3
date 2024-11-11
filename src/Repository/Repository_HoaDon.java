@@ -215,4 +215,20 @@ public class Repository_HoaDon {
         }
     }
 
+    //update maKh vao hoa don 
+    public void ThemMaKH(String maHD,String maKh) {
+        sql = "update HoaDon\n"
+                + "set makhachhang =?\n"
+                + "where ma=?";
+        try {
+            con=DBConnect.DBConnect_Cong.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.setObject(1, maKh);
+            ps.setObject(2, maHD);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+
 }

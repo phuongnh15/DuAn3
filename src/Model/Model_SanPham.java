@@ -10,6 +10,7 @@ public class Model_SanPham {
     private String ram;
     private String mauSac;
     private String dungLuong;
+    private double thanhTien;
   
     private int id;
 
@@ -128,6 +129,7 @@ public class Model_SanPham {
         this.soLuongTonKho = soLuongTonKho;
         this.gia = gia;
         this.cpu = cpu;
+        
     }
 
     public Model_SanPham(String maSP, int soLuongTonKho, double gia, String cpu, int id) {
