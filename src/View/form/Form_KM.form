@@ -161,7 +161,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="txt_giamgiaTD" alignment="0" pref="165" max="32767" attributes="0"/>
-                          <Component id="txt_giamGia" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txt_moTa" alignment="0" max="32767" attributes="0"/>
                           <Component id="txt_dieuKien" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="248" max="32767" attributes="0"/>
@@ -197,7 +197,7 @@
                                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txt_giamGia" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="txt_moTa" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                                   </Group>
@@ -353,12 +353,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gi&#x1ea3;m gi&#xe1;:"/>
+                <Property name="text" type="java.lang.String" value="M&#xf4; t&#x1ea3;:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txt_giamGia">
+            <Component class="javax.swing.JTextField" name="txt_moTa">
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_giamGiaActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_moTaActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
@@ -430,6 +430,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbl_khuyenMaiMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -251,6 +251,9 @@
                   </Border>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ThemNVActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btn_XoaNV">
               <Properties>
@@ -263,6 +266,9 @@
                   </Border>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_XoaNVActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btn_SuaNV">
               <Properties>
@@ -468,6 +474,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbl_NhanVienMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

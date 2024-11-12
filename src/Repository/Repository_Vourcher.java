@@ -46,53 +46,42 @@ public class Repository_Vourcher {
             return null;
         }
     }
-//    
-//    public ArrayList<Model.Model_HoaDon> loc(boolean trangthai){
-//        ArrayList<Model.Model_HoaDon> list_HD = new ArrayList<>();
-//        sql = "select mahoadon, kh.makhachhang, kh.ten, kh.sodienthoai, id_nhanvien, ngaythanhtoan, tongtienBanDau, tongkhuyenmai, maVoucher, tongtienSauKM, trangthai from HoaDon hd\n" +
-//"join KhachHang kh on kh.makhachhang = hd.makhachhang where trangthai = ?";
-//        try {
-//            con = DBConnect.DBConnect_Phuong.getConnection();
-//            ps = con.prepareStatement(sql);
-//            ps.setObject(1, trangthai);
-//            rs = ps.executeQuery();
-//            while(rs.next()) {
-//                String maHD = rs.getString(1);
-//                String maKH = rs.getString(2);
-//                String tenKH = rs.getString(3);
-//                String sdt = rs.getString(4);
-//                String id_NV = rs.getString(5);
-//                String ngaythanhtoan = rs.getString(6);
-//                double tongtienBD = rs.getDouble(7);
-//                double tongKM = rs.getDouble(8);
-//                String maVoucher = rs.getString(9);
-//                double tongtiensauKM = rs.getDouble(10);
-//                boolean tt = rs.getBoolean(11);
-//                Model.Model_HoaDon hd = new Model_HoaDon(maHD, maKH, tenKH, sdt, id_NV, ngaythanhtoan, maVoucher, tongtienBD, tongKM, tongtiensauKM, tt);
-//                list_HD.add(hd);
-//            }
-//            return list_HD;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//    
-//    public int xoa(String ma_xoa, boolean tt) {
-//        try {
-//            sql = "delete from HoaDonChiTiet where mahoadon = ?\n" +
-//"delete from HoaDon where mahoadon = ?";
-//            con = DBConnect.DBConnect_Phuong.getConnection();
-//            ps = con.prepareStatement(sql);
-//            ps.setObject(1, ma_xoa);
-//            ps.setObject(2, ma_xoa);
-//            return ps.executeUpdate();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return 0;
-//        }
-//    }
-//}
+
+    public int them(Model_Vourcher model) {
+        try {
+            sql = "insert into Voucher(maVoucher,moTa,giamGiaToiDa,ngayBD,ngayKT,giamgia) values(?,?,?,?,?,?)";
+            con = DBConnect_Cong.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, model.getMa());
+            ps.setObject(2, model.getMoTa());
+            ps.setObject(3, model.getGiamToiDa());
+            ps.setObject(4, model.getNgayBD());
+            ps.setObject(5, model.getNgayKT());
+            ps.setObject(6, model.getGiamGia());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int sua(Model_Vourcher model) {
+        try {
+            sql = "update Voucher set moTa= ?,giamGiaToiDa= ?,ngayBD= ?,ngayKT= ?,giamGia= ? where maVoucher=?";
+            con = DBConnect_Cong.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, model.getMoTa());
+            ps.setObject(2, model.getGiamToiDa());
+            ps.setObject(3, model.getNgayBD());
+            ps.setObject(4, model.getNgayKT());
+            ps.setObject(5, model.getGiamGia());
+            ps.setObject(6, model.getMa());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
     public ArrayList<String> cboMaVoucher_FormBH(double tongTien) {
         ArrayList<String> list = new ArrayList<>();
@@ -149,39 +138,37 @@ public class Repository_Vourcher {
             return null;
         }
     }
-    
+
     public double tinhTienGiamGia(double tongTien, String maVoucher) {
-    double giamGiaTotNhat = 0;
-    sql = "SELECT phantramgiamgia, giamGiaToiDa FROM Voucher WHERE maVoucher = ?";
+        double giamGiaTotNhat = 0;
+        sql = "SELECT phantramgiamgia, giamGiaToiDa FROM Voucher WHERE maVoucher = ?";
 
-    try {
-        con = DBConnect_Cong.getConnection();
-        ps = con.prepareStatement(sql);
-        ps.setString(1, maVoucher);  
-        rs = ps.executeQuery();
-        
-        if (rs.next()) {
-            double phanTramGiamGia = rs.getDouble("phantramgiamgia");
-            double giamGiaToiDa = rs.getDouble("giamGiaToiDa");
+        try {
+            con = DBConnect_Cong.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maVoucher);
+            rs = ps.executeQuery();
 
-          
-            double giamGia = tongTien * phanTramGiamGia / 100;
+            if (rs.next()) {
+                double phanTramGiamGia = rs.getDouble("phantramgiamgia");
+                double giamGiaToiDa = rs.getDouble("giamGiaToiDa");
 
-            // Kiểm tra nếu mức giảm giá vượt quá mức tối đa
-            if (giamGia > giamGiaToiDa) {
-                giamGia = giamGiaToiDa; // Giảm giá không được vượt quá mức tối đa
+                double giamGia = tongTien * phanTramGiamGia / 100;
+
+                // Kiểm tra nếu mức giảm giá vượt quá mức tối đa
+                if (giamGia > giamGiaToiDa) {
+                    giamGia = giamGiaToiDa; // Giảm giá không được vượt quá mức tối đa
+                }
+
+                // Cập nhật giá trị giảm giá cao nhất
+                giamGiaTotNhat = giamGia;
             }
 
-            // Cập nhật giá trị giảm giá cao nhất
-            giamGiaTotNhat = giamGia;
+            return giamGiaTotNhat;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            return 0;
         }
-        
-        return giamGiaTotNhat;  
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, e.getMessage());
-        return 0;  
     }
-}
-
 
 }

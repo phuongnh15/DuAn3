@@ -7,6 +7,7 @@ package View.form;
 import Model.Model_Vourcher;
 import Repository.Repository_Vourcher;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,13 +19,16 @@ public class Form_KM extends javax.swing.JPanel {
     /**
      * Creates new form Form_SP
      */
-     private Repository.Repository_Vourcher rp = new Repository_Vourcher();
+    private Repository.Repository_Vourcher rp = new Repository_Vourcher();
     private DefaultTableModel model = new DefaultTableModel();
     private int index = -1;
+
     public Form_KM() {
         initComponents();
-         fillTable(rp.getAll());
+        fillTable(rp.getAll());
+
     }
+
     void fillTable(ArrayList<Model_Vourcher> list) {
         model = (DefaultTableModel) tbl_khuyenMai.getModel();
         model.setRowCount(0);
@@ -32,8 +36,56 @@ public class Form_KM extends javax.swing.JPanel {
             model.addRow(model_Vourcher.toDatarow());
         }
     }
-    
-  
+
+    void showData(int index) {
+        txt_MaKM.setText(tbl_khuyenMai.getValueAt(index, 0).toString());
+        txt_moTa.setText(tbl_khuyenMai.getValueAt(index, 1).toString());
+        txt_giamgiaTD.setText(tbl_khuyenMai.getValueAt(index, 2).toString());
+        txt_ngayBD.setText(tbl_khuyenMai.getValueAt(index, 3).toString());
+        txt_NgayKT.setText(tbl_khuyenMai.getValueAt(index, 4).toString());
+        txt_dieuKien.setText(tbl_khuyenMai.getValueAt(index, 5).toString());
+    }
+
+    Model_Vourcher readForm() {
+        String ma = txt_MaKM.getText();
+        if (ma.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mã trống");
+            return null;
+        } else {
+            for (int i = 0; i < tbl_khuyenMai.getRowCount(); i++) {
+                if (ma.equalsIgnoreCase(tbl_khuyenMai.getValueAt(i, 0).toString())) {
+                    JOptionPane.showMessageDialog(this, "Trùng khoá chính");
+                    return null;
+                }
+            }
+        }
+        String moTa = txt_moTa.getText();
+        Double giamToiDa = Double.parseDouble(txt_giamgiaTD.getText());
+        String ngayBD = txt_ngayBD.getText();
+        String ngayKT = txt_NgayKT.getText();
+        Double giamGia = Double.parseDouble(txt_dieuKien.getText());
+        return new Model_Vourcher(ma, moTa, giamGia, giamToiDa, ngayBD, ngayKT);
+    }
+
+    Model_Vourcher readForm2() {
+        String ma = txt_MaKM.getText();
+        if (ma.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mã trống");
+            return null;
+        } else {
+            if (tbl_khuyenMai.getValueAt(index, 0).toString().equalsIgnoreCase(ma) != true) {
+                JOptionPane.showMessageDialog(this, "Không được sửa khoá chính");
+                return null;
+            }
+        }
+        String moTa = txt_moTa.getText();
+        Double giamToiDa = Double.parseDouble(txt_giamgiaTD.getText());
+        String ngayBD = txt_ngayBD.getText();
+        String ngayKT = txt_NgayKT.getText();
+        Double giamGia = Double.parseDouble(txt_dieuKien.getText());
+        return new Model_Vourcher(ma, moTa, giamGia, giamToiDa, ngayBD, ngayKT);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -61,7 +113,7 @@ public class Form_KM extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         txt_giamgiaTD = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        txt_giamGia = new javax.swing.JTextField();
+        txt_moTa = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txt_dieuKien = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -179,11 +231,11 @@ public class Form_KM extends javax.swing.JPanel {
             }
         });
 
-        jLabel7.setText("Giảm giá:");
+        jLabel7.setText("Mô tả:");
 
-        txt_giamGia.addActionListener(new java.awt.event.ActionListener() {
+        txt_moTa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_giamGiaActionPerformed(evt);
+                txt_moTaActionPerformed(evt);
             }
         });
 
@@ -223,7 +275,7 @@ public class Form_KM extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txt_giamgiaTD, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                    .addComponent(txt_giamGia)
+                    .addComponent(txt_moTa)
                     .addComponent(txt_dieuKien))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,7 +304,7 @@ public class Form_KM extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel7)
-                                    .addComponent(txt_giamGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txt_moTa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(38, 38, 38))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel8)
@@ -299,6 +351,11 @@ public class Form_KM extends javax.swing.JPanel {
                 "Mã Voucher", "Mô Tả", "Giảm tối đa", "Ngày bắt đầu", "Ngày kết thúc", "Điều kiện"
             }
         ));
+        tbl_khuyenMai.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_khuyenMaiMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbl_khuyenMai);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -339,32 +396,50 @@ public class Form_KM extends javax.swing.JPanel {
     }//GEN-LAST:event_txt_NgayKTActionPerformed
 
     private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
-        // TODO add your handling code here:
+        int chon = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm không");
+        if (chon == 0) {
+            rp.them(readForm());
+            fillTable(rp.getAll());
+        }
     }//GEN-LAST:event_btn_themActionPerformed
 
     private void btn_capnhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capnhatActionPerformed
-        // TODO add your handling code here:
+        int chon = JOptionPane.showConfirmDialog(this, "Bạn có muốn swuar không");
+        if (chon == 0) {
+            rp.sua(readForm2());
+            fillTable(rp.getAll());
+        }
     }//GEN-LAST:event_btn_capnhatActionPerformed
 
     private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btn_xoaActionPerformed
 
     private void btn_lammoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lammoiActionPerformed
-        // TODO add your handling code here:
+        txt_MaKM.setText("");
+        txt_moTa.setText("");
+        txt_dieuKien.setText("");
+        txt_ngayBD.setText("");
+        txt_NgayKT.setText("");
+        txt_giamgiaTD.setText("");
     }//GEN-LAST:event_btn_lammoiActionPerformed
 
     private void txt_giamgiaTDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_giamgiaTDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_giamgiaTDActionPerformed
 
-    private void txt_giamGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_giamGiaActionPerformed
+    private void txt_moTaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_moTaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_giamGiaActionPerformed
+    }//GEN-LAST:event_txt_moTaActionPerformed
 
     private void txt_dieuKienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dieuKienActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_dieuKienActionPerformed
+
+    private void tbl_khuyenMaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_khuyenMaiMouseClicked
+        index = tbl_khuyenMai.getSelectedRow();
+        showData(index);
+    }//GEN-LAST:event_tbl_khuyenMaiMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -393,8 +468,8 @@ public class Form_KM extends javax.swing.JPanel {
     private javax.swing.JTextField txt_MaKM;
     private javax.swing.JTextField txt_NgayKT;
     private javax.swing.JTextField txt_dieuKien;
-    private javax.swing.JTextField txt_giamGia;
     private javax.swing.JTextField txt_giamgiaTD;
+    private javax.swing.JTextField txt_moTa;
     private javax.swing.JTextField txt_ngayBD;
     // End of variables declaration//GEN-END:variables
 }
