@@ -128,7 +128,7 @@ public class Repository_HDCT {
         }
     }
 
-    public void ThemHDCT(ArrayList<Model_SanPham> danhSachSanPham,String maHD) {
+    public void ThemHDCT(ArrayList<Model_SanPham> danhSachSanPham, String maHD) {
         try {
             // SQL câu lệnh insert
             sql = "INSERT INTO HoaDonChiTiet(soLuong, dongia, mahoadon, imei, masanpham) VALUES (?,?,?,?,?)";
@@ -139,11 +139,11 @@ public class Repository_HDCT {
 
             // Thực hiện batch insert
             for (Model_SanPham sp : danhSachSanPham) {
-                ps.setObject(1, 1);  
-                ps.setObject(2, sp.getGia());           
-                ps.setObject(3, maHD);           
-                ps.setObject(4, sp.getCpu());          
-                ps.setObject(5, sp.getMaSP());           
+                ps.setObject(1, 1);
+                ps.setObject(2, sp.getGia());
+                ps.setObject(3, maHD);
+                ps.setObject(4, sp.getCpu());
+                ps.setObject(5, sp.getMaSP());
 
                 ps.addBatch();  // Thêm câu lệnh vào batch
             }
@@ -163,6 +163,33 @@ public class Repository_HDCT {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void XoaGioHang(String maImei) {
+        sql = "DELETE FROM GioHangTamThoi WHERE imei = ?";
+        try {
+          
+            con = DBConnect.DBConnect_Phuong.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, maImei);
+
+            int rowsAffected = ps.executeUpdate();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Lỗi khi xóa sản phẩm: " + e.getMessage());
+        } finally {
+            // Đóng tài nguyên kết nối
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

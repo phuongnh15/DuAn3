@@ -248,7 +248,7 @@ public class Repository_HoaDon {
             // Thực hiện cập nhật
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                JOptionPane.showMessageDialog(null, "Cập nhật hóa đơn thành công!");
+                JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
             } else {
                 JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn cần cập nhật.");
             }

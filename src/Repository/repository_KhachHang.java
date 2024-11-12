@@ -150,26 +150,38 @@ public class repository_KhachHang {
 //        return check > 0;
 //
 //    }
-    public String[] getThongTinKH(String sdt) {
-        String[] thongTinKH = null; // Khởi tạo mảng trả về
-        query = "SELECT makhachhang, ten FROM KhachHang WHERE sodienthoai = ?";
-        conn = DBConnect_Cong.getConnection();
+    // Phương thức lấy thông tin khách hàng từ số điện thoại và cập nhật vào hóa đơn
+    public String[] capNhatThongTinKH(String sdt, String maHD) {
+        String[] thongTinKH = null; 
+        String query = "SELECT makhachhang, ten FROM KhachHang WHERE sodienthoai = ?";
 
         try {
+           
+            conn = DBConnect.DBConnect_Cong.getConnection();
             pr = conn.prepareStatement(query);
             pr.setObject(1, sdt);
-
             rs = pr.executeQuery();
+
+            // Kiểm tra nếu tìm thấy khách hàng
             if (rs.next()) {
                 thongTinKH = new String[2];
-                thongTinKH[0] = rs.getString("makhachhang");
-                thongTinKH[1] = rs.getString("ten");
+                thongTinKH[0] = rs.getString("makhachhang"); // Lấy mã khách hàng
+                thongTinKH[1] = rs.getString("ten");        // Lấy tên khách hàng
+
+                // Nếu có mã khách hàng, tiến hành cập nhật vào hóa đơn
+                String sql = "UPDATE HoaDon SET makhachhang = ? WHERE mahoadon = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setObject(1, thongTinKH[0]); // Sử dụng mã KH vừa lấy
+                ps.setObject(2, maHD);          // Gán mã hóa đơn
+                ps.executeUpdate();
+                ps.close();
+            } else {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng với số điện thoại: " + sdt);
             }
         } catch (SQLException e) {
-
             JOptionPane.showMessageDialog(null, e.getMessage());
         } finally {
-            // Đóng kết nối sau khi truy vấn xong
+            // Đóng các kết nối
             try {
                 if (rs != null) {
                     rs.close();
@@ -185,7 +197,8 @@ public class repository_KhachHang {
             }
         }
 
-        return thongTinKH; // Trả về mảng kết quả
+        // Trả về mảng chứa mã KH và tên (hoặc null nếu không tìm thấy)
+        return thongTinKH;
     }
 
     public String[] getMaKh_TenKh(String maHoaDon) {
