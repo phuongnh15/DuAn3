@@ -155,7 +155,6 @@ public class Form_BH extends javax.swing.JPanel {
         lbl_TongTien1 = new javax.swing.JLabel();
         lbl_Voucher_giamgiaCaoNhat = new javax.swing.JLabel();
         lbl_TongTien2 = new javax.swing.JLabel();
-        lbl_TongTien3 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -332,8 +331,6 @@ public class Form_BH extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("SĐT:");
 
-        lbl_TenKH.setText("TenKH");
-
         btn_TimKiem_SDT.setText("Tìm Kiếm");
         btn_TimKiem_SDT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -471,10 +468,6 @@ public class Form_BH extends javax.swing.JPanel {
         lbl_TongTien2.setForeground(new java.awt.Color(255, 51, 51));
         lbl_TongTien2.setText("VND");
 
-        lbl_TongTien3.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        lbl_TongTien3.setForeground(new java.awt.Color(255, 51, 51));
-        lbl_TongTien3.setText("VND");
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -515,7 +508,7 @@ public class Form_BH extends javax.swing.JPanel {
                                     .addGroup(jPanel4Layout.createSequentialGroup()
                                         .addComponent(lbl_TongTien_sauKM, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(lbl_TongTien3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lbl_TongTien2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(lbl_TongTien, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
                                         .addComponent(lbl_tienGiamGia, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -529,11 +522,6 @@ public class Form_BH extends javax.swing.JPanel {
                     .addComponent(jLabel9)
                     .addComponent(lbl_Voucher_giamgiaCaoNhat))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                    .addContainerGap(250, Short.MAX_VALUE)
-                    .addComponent(lbl_TongTien2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(39, 39, 39)))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -567,11 +555,11 @@ public class Form_BH extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
                     .addComponent(txt_NgayThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
+                .addGap(15, 15, 15)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(lbl_TongTien_sauKM)
-                    .addComponent(lbl_TongTien3))
+                    .addComponent(lbl_TongTien2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -584,12 +572,7 @@ public class Form_BH extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_LamMoi)
                     .addComponent(btn_ThanhToan))
-                .addContainerGap(83, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(210, 210, 210)
-                    .addComponent(lbl_TongTien2)
-                    .addContainerGap(374, Short.MAX_VALUE)))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         jPanel6.setLayout(new java.awt.BorderLayout());
@@ -743,6 +726,24 @@ public class Form_BH extends javax.swing.JPanel {
         rpHDCT.ThemGioHang(readForm_GioHang(i));
 
         getAllGiohangtb(rpHDCT.getAllGioHangTamThoi(lbl_MaHD.getText()));
+        //kiem tra voucher
+
+        try {
+            // Loại bỏ các ký tự phân cách như "," hoặc "."
+            String tongTienStr = lbl_TongTien.getText().replace(",", "").replace(".", "");
+            double tongTien = Double.parseDouble(tongTienStr);
+
+            // Gọi phương thức fillCbo_Voucher_BH với giá trị tổng tiền
+            fillCbo_Voucher_BH(rpVoucher.cboMaVoucher_FormBH(tongTien));
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Lỗi định dạng số trong Tổng tiền: " + lbl_TongTien.getText(),
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
 
 
     }//GEN-LAST:event_tbl_DSSPMouseClicked
@@ -879,9 +880,22 @@ public class Form_BH extends javax.swing.JPanel {
         lbl_tienGiamGia.setText(df.format(tienKM) + "");
         double tongTiensauKM = tongTien - tienKM;
         lbl_TongTien_sauKM.setText(df.format(tongTiensauKM));
+        GetVoucherTotNhat();
 
     }//GEN-LAST:event_cbo_MaGiamGiaActionPerformed
+    void GetVoucherTotNhat() {
+        String tongTienStr = lbl_TongTien.getText().replace(",", "").replace(".", "");
+        double tongTien = Double.parseDouble(tongTienStr);
 
+        String voucherTotNhat = rpVoucher.voucher_ToTNhat(tongTien);
+        if (voucherTotNhat != null) {
+            lbl_Voucher_giamgiaCaoNhat.setText("Voucher có mức Giảm giá cao nhất: " + voucherTotNhat);
+        }
+        String maVoucher = cbo_MaGiamGia.getSelectedItem().toString();
+        double tienKM = rpVoucher.tinhTienGiamGia(tongTien, maVoucher);
+        txt_NgayThanhToan.setText(lbl_Ngay.getText());
+
+    }
     private void cbo_MaGiamGiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_MaGiamGiaMouseClicked
         String tongTienStr = lbl_TongTien.getText().replace(",", "").replace(".", "");
         double tongTien = Double.parseDouble(tongTienStr);
@@ -942,7 +956,7 @@ public class Form_BH extends javax.swing.JPanel {
         ///Cap nhat hoa don vao bang hoa don
         rpHD.CapNhatHoaDonThanToan(capNhatlaiHoaDon(), maHD);
         //xoa trang
-        
+
         xoaTrang();
     }//GEN-LAST:event_btn_ThanhToanActionPerformed
 
@@ -988,7 +1002,6 @@ public class Form_BH extends javax.swing.JPanel {
     private javax.swing.JLabel lbl_TongTien;
     private javax.swing.JLabel lbl_TongTien1;
     private javax.swing.JLabel lbl_TongTien2;
-    private javax.swing.JLabel lbl_TongTien3;
     private javax.swing.JLabel lbl_TongTien_sauKM;
     private javax.swing.JLabel lbl_Voucher_giamgiaCaoNhat;
     private javax.swing.JLabel lbl_maNhanVien;
