@@ -145,6 +145,25 @@ BEGIN
     WHERE masp = @masp AND soluongtonkho > 0;
 
 END;
+select * from Imei
+--Cộng dồn số lượng tồm kho 
+CREATE TRIGGER trg_UpdateSoLuongTonKho
+ON Imei
+AFTER INSERT
+AS
+BEGIN
+    -- Tăng số lượng tồn kho cho mỗi sản phẩm
+    UPDATE SanPham
+    SET soluongtonkho = soluongtonkho + (
+        SELECT COUNT(*)
+        FROM Inserted
+        WHERE Inserted.masp = SanPham.masp
+    )
+    WHERE masp IN (SELECT DISTINCT masp FROM Inserted);
+END;
+
+
+
 
 select Imei,trangthai,masp from Imei where masp ='sp001'
 

@@ -39,7 +39,7 @@ public class reponsitory_SanPham {
 
     public ArrayList<Model_SanPham> gettAll_SpChiTiet() {
         ArrayList<Model_SanPham> ds = new ArrayList<>();
-        sql = "SELECT masp, tenSP, soluongtonkho, gia, cpu, gpu, ram, mausac, dungLuong FROM SanPham where soluongtonkho>0 ";
+        sql = "SELECT masp,tensp,  soluongtonkho, gia, cpu, gpu, ram, mausac, dungLuong FROM SanPham where soluongtonkho>0 ";
 
         try {
             con = DBConnect.DBConnect_Cong.getConnection();

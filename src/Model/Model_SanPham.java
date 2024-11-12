@@ -173,6 +173,9 @@ public class Model_SanPham {
     }
 
     public Object toData_CTSP() {
+        return new Object[]{maSP, soLuongTonKho, gia, cpu, gpu, ram, mauSac, dungLuong};
+    }
+    public Object toData_CTSP1() {
         return new Object[]{maSP,tenSP, soLuongTonKho, gia, cpu, gpu, ram, mauSac, dungLuong};
     }
 

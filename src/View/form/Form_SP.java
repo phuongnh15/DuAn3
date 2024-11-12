@@ -62,7 +62,7 @@ public class Form_SP extends javax.swing.JPanel {
         model_SPChitiet = (DefaultTableModel) tbl_CTSP.getModel();
         model_SPChitiet.setRowCount(0);
         for (Model_SanPham d : ds) {
-            model_SPChitiet.addRow((Object[]) d.toData_CTSP());
+            model_SPChitiet.addRow((Object[]) d.toData_CTSP1());
         }
     }
 
