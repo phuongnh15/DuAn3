@@ -61,6 +61,7 @@ ADD PhanTramGiamGia INT;
 
 DROP TRIGGER trg_UpdateTrangThaiHoaDon;
 --xoatrigger
+
 --cap nhat trang thai hoa don tu gio hang
 CREATE TRIGGER trg_UpdateTrangThaiHoaDon
 ON HoaDonChiTiet
@@ -79,9 +80,90 @@ BEGIN
         WHERE maHoaDon = @maHoaDon;
     END
 
+select * from ImeiDaBan
 
+drop table ImeiDaBan
+CREATE TABLE ImeiDaBan (
+    id INT PRIMARY KEY IDENTITY,
+    maimei VARCHAR(30) NOT NULL,
+    masp VARCHAR(20),
+   
+);
+
+
+DROP TRIGGER trg_InsertImeiDaBan;
+--xoatrigger
+
+CREATE TRIGGER trg_InsertImeiDaBan
+ON HoaDonChiTiet
+AFTER INSERT
+AS
+BEGIN
+    -- Biến lưu trữ thông tin được chèn vào bảng HoaDonChiTiet
+    DECLARE @maimei VARCHAR(30);
+    DECLARE @masp VARCHAR(20);
+   
+
+    -- Lấy giá trị từ bảng HoaDonChiTiet sau khi chèn
+    SELECT 
+        @maimei = i.imei,
+        @masp = i.masanpham
+       
+    FROM 
+        inserted i
+    
+    
+    -- Thực hiện chèn dữ liệu vào bảng ImeiDaBan
+    INSERT INTO ImeiDaBan (maimei, masp)
+    VALUES (@maimei, @masp);
+END;
+
+
+
+DROP TRIGGER trg_UpdateStockAndDeleteImei;
+--xoatrigger
+--trừ số lượng tồn kho
+CREATE TRIGGER trg_UpdateStockAndDeleteImei
+ON HoaDonChiTiet
+AFTER INSERT
+AS
+BEGIN
+    -- Biến lưu trữ thông tin cần thiết
+    DECLARE @masp VARCHAR(20);
+    DECLARE @imei VARCHAR(30);
+
+    -- Lấy thông tin từ bảng 'inserted' (bảng ảo chứa bản ghi mới được chèn vào HoaDonChiTiet)
+    SELECT 
+        @masp = masanpham,
+        @imei = imei
+    FROM 
+        inserted;
+
+    -- Trừ đi 1 số lượng tồn kho của sản phẩm trong bảng SanPham
+    UPDATE SanPham
+    SET soluongtonkho = soluongtonkho - 1
+    WHERE masp = @masp AND soluongtonkho > 0;
+
+END;
+
+select Imei,trangthai,masp from Imei where masp ='sp001'
+
+delete from GioHangTamThoi
+SELECT imei 
+FROM Imei i
+WHERE i.masp =  'SP002'
+AND NOT EXISTS (
+    SELECT 1 
+    FROM ImeiDaBan idb 
+    WHERE idb.maimei = i.imei
+);
+
+
+select * from SanPham
 select *from KhachHang
 select * from HoaDon
+select * from GioHangTamThoi
+delete from GioHangTamThoi where imei = ?
 -- IMEI cho sản phẩm SP001
 INSERT INTO Imei (imei, trangthai, masp) VALUES
 ('IMEI00101', 1, 'SP001'),

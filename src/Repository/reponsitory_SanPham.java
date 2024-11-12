@@ -39,7 +39,7 @@ public class reponsitory_SanPham {
 
     public ArrayList<Model_SanPham> gettAll_SpChiTiet() {
         ArrayList<Model_SanPham> ds = new ArrayList<>();
-        sql = "SELECT masp, tenSP, soluongtonkho, gia, cpu, gpu, ram, mausac, dungLuong FROM SanPham";
+        sql = "SELECT masp, tenSP, soluongtonkho, gia, cpu, gpu, ram, mausac, dungLuong FROM SanPham where soluongtonkho>0 ";
 
         try {
             con = DBConnect.DBConnect_Cong.getConnection();
@@ -79,6 +79,28 @@ public class reponsitory_SanPham {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
+        }
+    }
+    public ArrayList<Model_SanPham> getAll_imei(String maSP){
+        ArrayList<Model_SanPham> ds=new ArrayList<>();
+        sql="select Imei,trangthai,masp from Imei where masp = ?";
+        try {
+            con=DBConnect.DBConnect_Cong.getConnection();
+            pr=con.prepareStatement(sql);
+            pr.setObject(1, maSP);
+            rs=pr.executeQuery();
+            while (rs.next()) {                
+                String imei=rs.getString(1);
+                boolean  trangthai=rs.getBoolean(2);
+                String masp=rs.getString(3);
+                
+                Model_SanPham sp=new Model_SanPham(masp, imei, trangthai);
+                ds.add(sp);
+            }
+            return ds;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            return null;
         }
     }
 }

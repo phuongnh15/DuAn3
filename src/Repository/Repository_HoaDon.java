@@ -244,6 +244,7 @@ public class Repository_HoaDon {
             ps.setObject(4, hd.getMaVoucher());
           
             ps.setObject(5, maHD);   
+            
 
             // Thực hiện cập nhật
             int rowsAffected = ps.executeUpdate();

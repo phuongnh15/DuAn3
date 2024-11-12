@@ -8,30 +8,17 @@ import Model.Model_Imei_Sp;
 import Model.Model_SanPham;
 import Repository.Repository_IMei;
 import Repository.reponsitory_SanPham;
-import com.sun.tools.javac.Main;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
+import java.io.File;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
+import java.util.List;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import test.ExcelImporter;
 
 /**
  *
@@ -52,8 +39,7 @@ public class Form_SP extends javax.swing.JPanel {
         initComponents();
         fillToTable(rp.gettAll_Sp());
         fillToTable_ChiTiet(rp.gettAll_SpChiTiet());
-        fillTo_Imei(rp_imei.getAll());
-       
+
     }
 
     void fillToTable(ArrayList<Model_SanPham> ds) {
@@ -63,11 +49,12 @@ public class Form_SP extends javax.swing.JPanel {
             model.addRow((Object[]) d.toDataSP());
         }
     }
-    void fillTo_Imei(ArrayList<Model_Imei_Sp> ds) {
-        model_SPImei = (DefaultTableModel) tbl_sp.getModel();
+
+    void fillTo_Imei(ArrayList<Model_SanPham> ds) {
+        model_SPImei = (DefaultTableModel) tbl_Imei.getModel();
         model_SPImei.setRowCount(0);
-        for (Model_Imei_Sp d : ds) {
-            model_SPImei.addRow((Object[]) d.toDataRow());
+        for (Model_SanPham d : ds) {
+            model_SPImei.addRow((Object[]) d.todata_DSIemi());
         }
     }
 
@@ -98,10 +85,6 @@ public class Form_SP extends javax.swing.JPanel {
         lbl_Gio.setText(formattedTime);
     }
 
-
-
-
-   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -462,15 +445,30 @@ public class Form_SP extends javax.swing.JPanel {
 
         btn_lammoi.setBackground(new java.awt.Color(102, 255, 255));
         btn_lammoi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btn_lammoi.setText("Làm Mới");
+        btn_lammoi.setText("Import");
+        btn_lammoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_lammoiActionPerformed(evt);
+            }
+        });
 
         btn_themImei.setBackground(new java.awt.Color(102, 255, 255));
         btn_themImei.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btn_themImei.setText("Thêm");
+        btn_themImei.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_themImeiActionPerformed(evt);
+            }
+        });
 
         btn_timKiemSP_imei.setBackground(new java.awt.Color(102, 255, 255));
         btn_timKiemSP_imei.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btn_timKiemSP_imei.setText("Tìm Kiếm");
+        btn_timKiemSP_imei.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_timKiemSP_imeiActionPerformed(evt);
+            }
+        });
 
         jLabel17.setText("Tên Sản Phẩm");
 
@@ -548,15 +546,20 @@ public class Form_SP extends javax.swing.JPanel {
 
         tbl_CTSP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã SP", "Số Lượng Tồn KHo", "Giá", "CPU", "GPU", "RAM", "Màu sắc", "Dung lượng"
+                "Mã SP", "Tên SP", "Số Lượng Tồn KHo", "Giá", "CPU", "GPU", "RAM", "Màu sắc", "Dung lượng"
             }
         ));
+        tbl_CTSP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_CTSPMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbl_CTSP);
 
         jButton4.setBackground(new java.awt.Color(102, 255, 255));
@@ -682,6 +685,52 @@ public class Form_SP extends javax.swing.JPanel {
     private void btn_dungluongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_dungluongActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_dungluongActionPerformed
+
+    private void btn_timKiemSP_imeiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_timKiemSP_imeiActionPerformed
+
+    }//GEN-LAST:event_btn_timKiemSP_imeiActionPerformed
+
+    private void tbl_CTSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CTSPMouseClicked
+        // TODO add your handling code here:
+        int i = tbl_CTSP.getSelectedRow();
+        String masp = tbl_CTSP.getValueAt(i, 0).toString();
+        fillTo_Imei(rp.getAll_imei(masp));
+        lbl_TenSanPham.setText(tbl_CTSP.getValueAt(i, 1).toString());
+        txt_masp_imei.setText(masp);
+    }//GEN-LAST:event_tbl_CTSPMouseClicked
+    Model_Imei_Sp themDS_imei() {
+        String masp = txt_masp_imei.getText();
+        String maImei = txt_imei.getText();
+        return new Model_Imei_Sp(maImei, masp);
+    }
+    private void btn_themImeiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themImeiActionPerformed
+        // TODO add your handling code here:
+        rp_imei.ThemImei_SP(themDS_imei());
+        fillToTable_ChiTiet(rp.gettAll_SpChiTiet());
+        JOptionPane.showMessageDialog(null, "Thêm thành công!");
+        String masp = txt_masp_imei.getText();
+        fillTo_Imei(rp.getAll_imei(masp));
+        fillToTable_ChiTiet(rp.gettAll_SpChiTiet());
+    }//GEN-LAST:event_btn_themImeiActionPerformed
+
+    private void btn_lammoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lammoiActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            List<Model_Imei_Sp> imeiList = ExcelImporter.importExcel(selectedFile.getAbsolutePath());
+
+            // Lưu dữ liệu vào database
+            rp_imei.insertImeiList_Excel(imeiList);
+
+            JOptionPane.showMessageDialog(null, "Import thành công!");
+        }
+          String masp = txt_masp_imei.getText();
+         fillTo_Imei(rp.getAll_imei(masp));
+        fillToTable_ChiTiet(rp.gettAll_SpChiTiet());
+    }//GEN-LAST:event_btn_lammoiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

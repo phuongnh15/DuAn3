@@ -54,7 +54,6 @@ public class Form_BH extends javax.swing.JPanel {
         CapNhatThoiGian();
         Timer timer = new Timer(1000, e -> CapNhatThoiGian());
         timer.start();
-        model_GioHang.setRowCount(0);
 
     }
 
@@ -687,11 +686,13 @@ public class Form_BH extends javax.swing.JPanel {
     }
 
     private String openImeiDialog(String productId) {
+        String maImei = null;
         System.out.println("Đang mở IMEI dialog cho sản phẩm: " + productId);
         ImeiDialog imeiDialog = new ImeiDialog(null, productId);
 
         imeiDialog.setVisible(true); // Hiển thị dialog
-        return imeiDialog.selectedImei;
+        maImei = imeiDialog.selectedImei;
+        return maImei;
     }
 
     Model_SanPham readForm_GioHang(int i) {
@@ -700,9 +701,14 @@ public class Form_BH extends javax.swing.JPanel {
         int soLuong = 1;
         double donGia = Double.parseDouble(tbl_DSSP.getValueAt(i, 2).toString());
         String Imei = getImei();
-        String maHD = lbl_MaHD.getText();
-        Model_SanPham sp = new Model_SanPham(maSp, Imei, soLuong, donGia, maHD);
-        return sp;
+        if (Imei == null) {
+            return null;
+        } else {
+            String maHD = lbl_MaHD.getText();
+            Model_SanPham sp = new Model_SanPham(maSp, Imei, soLuong, donGia, maHD);
+            return sp;
+        }
+
     }
 
     void getAllGiohangtb(ArrayList<Model_SanPham> sp) {
@@ -719,26 +725,28 @@ public class Form_BH extends javax.swing.JPanel {
     private void tbl_DSSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_DSSPMouseClicked
         // TODO add your handling code here:
         int i = tbl_DSSP.getSelectedRow();
-        rpHDCT.ThemGioHang(readForm_GioHang(i));
+            
+            rpHDCT.ThemGioHang(readForm_GioHang(i));
 
-        getAllGiohangtb(rpHDCT.getAllGioHangTamThoi(lbl_MaHD.getText()));
-        //kiem tra voucher
+            getAllGiohangtb(rpHDCT.getAllGioHangTamThoi(lbl_MaHD.getText()));
+            //kiem tra voucher
 
-        try {
-            // Loại bỏ các ký tự phân cách như "," hoặc "."
-            String tongTienStr = lbl_TongTien.getText().replace(",", "").replace(".", "");
-            double tongTien = Double.parseDouble(tongTienStr);
+            try {
+                // Loại bỏ các ký tự phân cách như "," hoặc "."
+                String tongTienStr = lbl_TongTien.getText().replace(",", "").replace(".", "");
+                double tongTien = Double.parseDouble(tongTienStr);
 
-            // Gọi phương thức fillCbo_Voucher_BH với giá trị tổng tiền
-            fillCbo_Voucher_BH(rpVoucher.cboMaVoucher_FormBH(tongTien));
+                // Gọi phương thức fillCbo_Voucher_BH với giá trị tổng tiền
+                fillCbo_Voucher_BH(rpVoucher.cboMaVoucher_FormBH(tongTien));
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Lỗi định dạng số trong Tổng tiền: " + lbl_TongTien.getText(),
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Lỗi định dạng số trong Tổng tiền: " + lbl_TongTien.getText(),
+                        "Lỗi",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            
         }
 
 
@@ -812,7 +820,7 @@ public class Form_BH extends javax.swing.JPanel {
     private void btn_TimKiem_SDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_TimKiem_SDTActionPerformed
         if (timKiemKH() != null) {
             if (!lbl_MaKH.getText().isEmpty()) {
-                int i = JOptionPane.showConfirmDialog(null, "Bạn có muốn thay đổi thông tin không?", "Xác nhận",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                int i = JOptionPane.showConfirmDialog(null, "Bạn có muốn thay đổi thông tin không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (i == 1) {
                     txt_SDT_KH.setText("");
                     return;
@@ -983,6 +991,7 @@ public class Form_BH extends javax.swing.JPanel {
         //xoa trang
 
         xoaTrang();
+        fillToTable_ChiTiet(rp.gettAll_SpChiTiet());
     }//GEN-LAST:event_btn_ThanhToanActionPerformed
 
     private void btn_XoaGioHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaGioHangActionPerformed

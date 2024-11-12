@@ -49,4 +49,9 @@ public class Model_Imei_Sp {
           maSP,Iemi,trangThai?"Chưa bán":"Đã Bán "  
         };
     }
+
+    public Model_Imei_Sp(String Iemi, String maSP) {
+        this.Iemi = Iemi;
+        this.maSP = maSP;
+    }
 }
