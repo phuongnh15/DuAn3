@@ -178,7 +178,7 @@ AND NOT EXISTS (
 );
 
 
-select * from SanPham
+select * from Imei
 select *from KhachHang
 select * from HoaDon
 select * from GioHangTamThoi
