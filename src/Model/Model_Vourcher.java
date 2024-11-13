@@ -17,6 +17,25 @@ public class Model_Vourcher {
     private String ngayBD;
     private String ngayKT;
     private String dieuKien;
+    private int mucGiamGia;
+
+    public int getMucGiamGia() {
+        return mucGiamGia;
+    }
+
+    public void setMucGiamGia(int mucGiamGia) {
+        this.mucGiamGia = mucGiamGia;
+    }
+
+    public Model_Vourcher(String ma, String moTa, Double giamGia, Double giamToiDa, String ngayBD, String ngayKT, int mucGiamGia) {
+        this.ma = ma;
+        this.moTa = moTa;
+        this.giamGia = giamGia;
+        this.giamToiDa = giamToiDa;
+        this.ngayBD = ngayBD;
+        this.ngayKT = ngayKT;
+        this.mucGiamGia = mucGiamGia;
+    }
 
     public Model_Vourcher() {
     }
@@ -107,6 +126,6 @@ public class Model_Vourcher {
     
     
     public Object[] toDatarow(){
-        return new Object[]{getMa(),getMoTa(),getGiamToiDa(),getNgayBD(),getNgayKT(),getGiamGia()};
+        return new Object[]{getMa(),getMoTa(),getGiamToiDa(),getNgayBD(),getNgayKT(),getGiamGia(),getMucGiamGia()};
     }
 }

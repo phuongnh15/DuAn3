@@ -33,11 +33,12 @@ public class Repository_Vourcher {
                 String moTa = rs.getString(2);
                 Double giamGia = rs.getDouble(3);
                 Double giamToiDa = rs.getDouble(4);
-                Integer hinhThuc = rs.getInt(5);
-                String ngayBD = rs.getString(6);
-                String ngayKT = rs.getString(7);
-                String dieuKien = rs.getString(8);
-                Model_Vourcher model = new Model_Vourcher(ma, moTa, giamGia, giamToiDa, ngayBD, ngayKT);
+                int mucgiamgia = rs.getInt(8);
+                String ngayBD = rs.getString(5);
+                String ngayKT = rs.getString(6);
+                String dieuKien = rs.getString(7);
+//                Model_Vourcher model = new Model_Vourcher(ma, moTa, giamGia, giamToiDa, ngayBD, ngayKT);
+                Model_Vourcher model = new Model_Vourcher(ma, moTa, giamGia, giamToiDa, ngayBD, ngayKT, mucgiamgia);
                 list.add(model);
             }
             return list;
@@ -49,7 +50,7 @@ public class Repository_Vourcher {
 
     public int them(Model_Vourcher model) {
         try {
-            sql = "insert into Voucher(maVoucher,moTa,giamGiaToiDa,ngayBD,ngayKT,giamgia) values(?,?,?,?,?,?)";
+            sql = "insert into Voucher(maVoucher,moTa,giamGiaToiDa,ngayBD,ngayKT,giamgia,phantramgiamgia) values(?,?,?,?,?,?,?)";
             con = DBConnect_Cong.getConnection();
             ps = con.prepareStatement(sql);
             ps.setObject(1, model.getMa());
@@ -58,6 +59,7 @@ public class Repository_Vourcher {
             ps.setObject(4, model.getNgayBD());
             ps.setObject(5, model.getNgayKT());
             ps.setObject(6, model.getGiamGia());
+            ps.setObject(7, model.getMucGiamGia());
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +69,7 @@ public class Repository_Vourcher {
 
     public int sua(Model_Vourcher model) {
         try {
-            sql = "update Voucher set moTa= ?,giamGiaToiDa= ?,ngayBD= ?,ngayKT= ?,giamGia= ? where maVoucher=?";
+            sql = "update Voucher set moTa= ?,giamGiaToiDa= ?,ngayBD= ?,ngayKT= ?,giamGia= ?,phantramgiamgia=? where maVoucher=?";
             con = DBConnect_Cong.getConnection();
             ps = con.prepareStatement(sql);
             ps.setObject(1, model.getMoTa());
@@ -75,7 +77,8 @@ public class Repository_Vourcher {
             ps.setObject(3, model.getNgayBD());
             ps.setObject(4, model.getNgayKT());
             ps.setObject(5, model.getGiamGia());
-            ps.setObject(6, model.getMa());
+            ps.setObject(7, model.getMa());
+            ps.setObject(6, model.getMucGiamGia());
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
