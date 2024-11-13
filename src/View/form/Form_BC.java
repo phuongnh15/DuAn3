@@ -4,15 +4,20 @@
  */
 package View.form;
 
+import Model.Model_DoanhThu;
+import Repository.repository_DoanhThu;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import java.util.ArrayList;
+
+import javax.swing.DefaultComboBoxModel;
+
+import javax.swing.table.DefaultTableModel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
@@ -27,11 +32,43 @@ public class Form_BC extends javax.swing.JPanel {
     /**
      * Creates new form Form_SP
      */
+    private repository_DoanhThu rpdt = new repository_DoanhThu();
+    DefaultTableModel model_sanpham_DT;
+
     public Form_BC() {
         initComponents();
-        showBarChart();
+        showBarChart("2024");
         showLineChart();// Hiển thị biểu đồ cột
+        cbo_ngayThang.setModel(new DefaultComboBoxModel<>(new String[]{"Năm", "Tháng"}));
 
+        jcalen_Thang.setVisible(false);
+
+        Jcalender_Nam.setVisible(true);
+        click_Cbo_ngayThang1();
+        fillToTable_DT_SP(rpdt.getSOLuongNam(2024, "Tang"));
+    }
+
+    void fillToTable_DT_SP(ArrayList<Model_DoanhThu> ds) {
+        model_sanpham_DT = (DefaultTableModel) tbl_SanPhamBC.getModel();
+        model_sanpham_DT.setRowCount(0);
+        for (Model_DoanhThu d : ds) {
+            model_sanpham_DT.addRow((Object[]) d.todata_SanPham_DT());
+        }
+    }
+
+    public void click_Cbo_ngayThang1() {
+        cbo_ngayThang.addActionListener(e -> {
+            String selected = (String) cbo_ngayThang.getSelectedItem();
+            if (selected != null && selected.equals("Tháng")) {
+
+                jcalen_Thang.setVisible(true);
+                Jcalender_Nam.setVisible(true);
+            } else if (selected != null && selected.equals("Năm")) {
+                jcalen_Thang.setVisible(false);
+
+                Jcalender_Nam.setVisible(true);
+            }
+        });
     }
 
 // Gọi phương thức
@@ -66,37 +103,83 @@ public class Form_BC extends javax.swing.JPanel {
         panel_DT_Thang.validate();
     }
 
-    private void showBarChart() {
-        // Dữ liệu tạm thời (giả định)
-        Map<Integer, Integer> salesData = new HashMap<>();
-        salesData.put(1, 5); // Tháng 1 bán được 50 sản phẩm
-        salesData.put(2, 8); // Tháng 2 bán được 80 sản phẩm
-        salesData.put(3, 6); // Tháng 3 bán được 60 sản phẩm
-        salesData.put(4, 7); // Tháng 4 bán được 70 sản phẩm
-        salesData.put(5, 9); // Tháng 5 bán được 90 sản phẩm
-        salesData.put(6, 11); // Tháng 6 bán được 110 sản phẩm
-        salesData.put(7, 10); // Tháng 7 bán được 100 sản phẩm
-        salesData.put(8, 12); // Tháng 8 bán được 120 sản phẩm
-        salesData.put(9, 8); // Tháng 9 bán được 80 sản phẩm
-        salesData.put(10, 9); // Tháng 10 bán được 90 sản phẩm
-        salesData.put(11, 7); // Tháng 11 bán được 70 sản phẩm
-        salesData.put(12, 10); // Tháng 12 bán được 100 sản phẩm
+    private void showLineChart(int year, int month) {
+        // Tạo dataset cho biểu đồ
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        // Lấy dữ liệu từ cơ sở dữ liệu
+        ArrayList<Model_DoanhThu> ds = rpdt.getDataByDay(year, month);
+
+        // Đảm bảo rằng tất cả các ngày (1-31) đều có dữ liệu
+        for (int day = 1; day <= 31; day++) {
+            // Mặc định số lượng là 0
+            int soLuong = 0;
+
+            // Kiểm tra xem dữ liệu cho ngày này đã có chưa
+            for (Model_DoanhThu data : ds) {
+                int dayFromData = Integer.parseInt(data.getThang()); // Chuyển ngày từ String sang int
+                if (dayFromData == day) {
+                    soLuong = data.getSoLuong(); // Cập nhật nếu có dữ liệu cho ngày này
+                    break; // Nếu tìm thấy thì không cần kiểm tra thêm
+                }
+            }
+
+            dataset.addValue(soLuong, "Số lượng", "Ngày " + day);
+        }
+
+        // Tạo biểu đồ đường
+        JFreeChart lineChart = ChartFactory.createLineChart(
+                "Số lượng sản phẩm bán theo ngày trong tháng " + month + " năm " + year,
+                "Ngày", // Trục X
+                "Số lượng", // Trục Y
+                dataset,
+                PlotOrientation.VERTICAL,
+                false, true, false);
+
+        // Xoay nhãn trục X để tránh chồng lấn
+        CategoryPlot plot = lineChart.getCategoryPlot();
+        CategoryAxis axis = plot.getDomainAxis();
+        axis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(45.0f)); // Xoay nhãn 45 độ
+
+        // Hiển thị biểu đồ
+        ChartPanel chartPanel = new ChartPanel(lineChart);
+        panel_topSPBanChay.removeAll();
+        panel_topSPBanChay.setLayout(new BorderLayout());
+        panel_topSPBanChay.add(chartPanel, BorderLayout.CENTER);
+        panel_topSPBanChay.revalidate();
+        panel_topSPBanChay.repaint();
+    }
+
+    private void showBarChart(String nam) {
+        // Lấy dữ liệu từ cơ sở dữ liệu
+        ArrayList<Model_DoanhThu> salesData = rpdt.getAll(nam);
 
         // Tạo dataset cho biểu đồ
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        // Thêm dữ liệu vào dataset
-        for (Map.Entry<Integer, Integer> entry : salesData.entrySet()) {
-            int month = entry.getKey();
-            int quantity = entry.getValue();
-            dataset.addValue(quantity, "Số lượng (chục)", "Tháng " + month);
+        // Đảm bảo rằng tất cả các tháng (1-12) đều có dữ liệu
+        for (int month = 1; month <= 12; month++) {
+            // Mặc định số lượng là 0
+            int soLuong = 0;
+
+            // Kiểm tra xem dữ liệu cho tháng này đã có chưa
+            for (Model_DoanhThu dt : salesData) {
+                int monthFromData = Integer.parseInt(dt.getThang()); // Chuyển tháng từ String sang int
+                if (monthFromData == month) {
+                    soLuong = dt.getSoLuong(); // Cập nhật nếu có dữ liệu cho tháng này
+                    break; // Nếu tìm thấy thì không cần kiểm tra thêm
+                }
+            }
+
+            // Thêm dữ liệu vào dataset (Tháng 1-12)
+            dataset.addValue(soLuong, "Số lượng", "Tháng " + month);
         }
 
         // Tạo biểu đồ cột
         JFreeChart barChart = ChartFactory.createBarChart(
-                "Số lượng bán của sản phẩm", // Tiêu đề biểu đồ
+                "Số lượng bán của sản phẩm theo tháng trong năm " + nam, // Tiêu đề biểu đồ
                 "Tháng", // Nhãn trục X
-                "Số lượng (chục)", // Nhãn trục Y
+                "Số lượng", // Nhãn trục Y
                 dataset, // Dữ liệu
                 PlotOrientation.VERTICAL, // Hướng biểu đồ
                 false, // Hiển thị chú thích
@@ -145,8 +228,10 @@ public class Form_BC extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_SanPhamBC = new javax.swing.JTable();
-        txt_NgayThang = new com.toedter.calendar.JDateChooser();
-        jMonthChooser1 = new com.toedter.calendar.JMonthChooser();
+        jcalen_Thang = new com.toedter.calendar.JMonthChooser();
+        cbo_ngayThang = new javax.swing.JComboBox<>();
+        Jcalender_Nam = new com.toedter.calendar.JYearChooser();
+        btn_Loc = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -247,7 +332,7 @@ public class Form_BC extends javax.swing.JPanel {
         jPanel3.setPreferredSize(new java.awt.Dimension(630, 220));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Thống Kê Sản Phẩm Bán Chạy");
+        jLabel1.setText("Thống Kê Số Lượng Sản Phẩm ");
 
         jLabel2.setText("Thời gian:");
 
@@ -268,6 +353,19 @@ public class Form_BC extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tbl_SanPhamBC);
 
+        cbo_ngayThang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbo_ngayThangActionPerformed(evt);
+            }
+        });
+
+        btn_Loc.setText("Lọc");
+        btn_Loc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_LocActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -275,19 +373,23 @@ public class Form_BC extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(132, 132, 132)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(cbo_sapxep, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(132, 132, 132)
                         .addComponent(jLabel2)
-                        .addGap(184, 184, 184)
-                        .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
-                        .addComponent(txt_NgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(38, 38, 38)
+                        .addComponent(cbo_ngayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbo_sapxep, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_Loc)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE)
+                .addComponent(jcalen_Thang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Jcalender_Nam, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -301,21 +403,24 @@ public class Form_BC extends javax.swing.JPanel {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(txt_NgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(cbo_ngayThang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jcalen_Thang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Jcalender_Nam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbo_sapxep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel3)
+                            .addComponent(btn_Loc))))
+                .addGap(6, 6, 6)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         Panel_SPBanChay.add(jPanel3, java.awt.BorderLayout.PAGE_START);
 
-        jTabbedPane1.addTab("Sản Phẩm Bán Chạy", Panel_SPBanChay);
+        jTabbedPane1.addTab("Số lượng", Panel_SPBanChay);
 
         jPanel5.setPreferredSize(new java.awt.Dimension(800, 616));
         jPanel5.setLayout(new java.awt.BorderLayout(10, 10));
@@ -552,13 +657,59 @@ public class Form_BC extends javax.swing.JPanel {
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+    void click_Cbo_ngayThang() {
+        cbo_ngayThang.addActionListener(e -> {
+            String selected = (String) cbo_ngayThang.getSelectedItem();
+            if (selected != null && !selected.equals("Tháng")) {
+                jcalen_Thang.setVisible(true); // Ẩn JCalendar khi chọn tháng
+                Jcalender_Nam.setVisible(true); // Ẩn JCalendar khi chọn tháng
+            } else {
+                jcalen_Thang.setVisible(true);
+                Jcalender_Nam.setVisible(false);// Hiện JCalendar khi chọn "Chọn ngày cụ thể"
+            }
+        });
+
+//        // Thêm sự kiện cho JCalendar
+//        calendar.addPropertyChangeListener("calendar", evt -> {
+//            comboBox.setVisible(false); // Ẩn ComboBox khi chọn ngày từ JCalendar
+//        });
+    }
+    private void cbo_ngayThangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbo_ngayThangActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_cbo_ngayThangActionPerformed
+
+    private void btn_LocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LocActionPerformed
+        // TODO add your handling code here:
+        String loc = "";
+        if (cbo_sapxep.getSelectedItem().equals("Tăng dần")) {
+            loc = "Tang";
+        } else {
+            loc = "Giam";
+        }
+        int selectedDate = Jcalender_Nam.getYear();
+        int month = jcalen_Thang.getMonth() + 1;
+        if (cbo_ngayThang.getSelectedItem().equals("Tháng")) {
+            showLineChart(selectedDate, month);
+            fillToTable_DT_SP(rpdt.getSOLuongThang(selectedDate, month, loc));
+        } else {
+            showBarChart(String.valueOf(selectedDate));
+            fillToTable_DT_SP(rpdt.getSOLuongNam(selectedDate, loc));
+            // Truyền năm vào phương thức hiển thị biểu đồ
+        }
+
+
+    }//GEN-LAST:event_btn_LocActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JYearChooser Jcalender_Nam;
     private javax.swing.JPanel Panel_SPBanChay;
     private javax.swing.JPanel Panel_h_l;
+    private javax.swing.JButton btn_Loc;
     private javax.swing.JComboBox<String> cbo_ThangBan;
     private javax.swing.JComboBox<String> cbo_namBan;
+    private javax.swing.JComboBox<String> cbo_ngayThang;
     private javax.swing.JComboBox<String> cbo_sapxep;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -574,7 +725,6 @@ public class Form_BC extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
-    private com.toedter.calendar.JMonthChooser jMonthChooser1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -588,6 +738,7 @@ public class Form_BC extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private com.toedter.calendar.JMonthChooser jcalen_Thang;
     private javax.swing.JLabel lbl_Gio;
     private javax.swing.JLabel lbl_MaNV;
     private javax.swing.JLabel lbl_Ngay;
@@ -599,6 +750,6 @@ public class Form_BC extends javax.swing.JPanel {
     private javax.swing.JPanel panel_DT_Thang;
     private javax.swing.JPanel panel_topSPBanChay;
     private javax.swing.JTable tbl_SanPhamBC;
-    private com.toedter.calendar.JDateChooser txt_NgayThang;
     // End of variables declaration//GEN-END:variables
+
 }
