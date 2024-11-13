@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class DBConnect_Phuong {
     private static final String USERNAME = "sa";
-    private static final String PASSWORD = "12345678";
+    private static final String PASSWORD = "123456789";
     private static final String SERVER = "localhost";
     private static final String PORT = "1433";
     private static final String DATABASE_NAME = "BanLapTopDell";

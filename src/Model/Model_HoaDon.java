@@ -14,6 +14,30 @@ public class Model_HoaDon {
     private double tongtienBD, tongKM, tongtiensauKM;
     private boolean trangthai;
     private int id;
+    private int id_HD;
+
+    public int getId_HD() {
+        return id_HD;
+    }
+
+    public void setId_HD(int id_HD) {
+        this.id_HD = id_HD;
+    }
+
+    public Model_HoaDon(String maHD, String maKH, String tenKH, String sdt, String id_NV, String ngaythanhtoan, String maVoucher, double tongtienBD, double tongKM, double tongtiensauKM, boolean trangthai, int id_HD) {
+        this.maHD = maHD;
+        this.maKH = maKH;
+        this.tenKH = tenKH;
+        this.sdt = sdt;
+        this.id_NV = id_NV;
+        this.ngaythanhtoan = ngaythanhtoan;
+        this.maVoucher = maVoucher;
+        this.tongtienBD = tongtienBD;
+        this.tongKM = tongKM;
+        this.tongtiensauKM = tongtiensauKM;
+        this.trangthai = trangthai;
+        this.id_HD = id_HD;
+    }
 
     public Model_HoaDon() {
     }
@@ -145,7 +169,7 @@ public class Model_HoaDon {
     }
 
     public Object[] ToDataRow() {
-        return new Object[]{this.maHD, this.maKH, this.tenKH, this.sdt, this.id_NV, this.ngaythanhtoan, this.tongtienBD, this.tongKM, this.maVoucher, this.tongtiensauKM, this.trangthai ? "Đã thanh toán" : "Chưa thanh toán"};
+        return new Object[]{this.id_HD,this.maHD, this.maKH, this.tenKH, this.sdt, this.id_NV, this.ngaythanhtoan, this.tongtienBD, this.tongKM, this.maVoucher, this.tongtiensauKM, this.trangthai ? "Đã thanh toán" : "Chưa thanh toán"};
     }
 
     public Object[] toDataHoaDonCho() {

@@ -17,6 +17,7 @@ public class Repository_HoaDon {
     private String sql = null;
 
     public ArrayList<Model.Model_HoaDon> getAll() {
+        int id_HD = 0;
         ArrayList<Model.Model_HoaDon> list_HD = new ArrayList<>();
         sql = "select mahoadon, kh.makhachhang, kh.ten, kh.sodienthoai, id_nhanvien, ngaythanhtoan, tongtienBanDau, tongkhuyenmai, maVoucher, tongtienSauKM, trangthai from HoaDon hd\n"
                 + "full join KhachHang kh on kh.makhachhang = hd.makhachhang";
@@ -25,6 +26,7 @@ public class Repository_HoaDon {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
+                id_HD+=1;
                 String maHD = rs.getString(1);
                 String maKH = rs.getString(2);
                 String tenKH = rs.getString(3);
@@ -36,7 +38,7 @@ public class Repository_HoaDon {
                 String maVoucher = rs.getString(9);
                 double tongtiensauKM = rs.getDouble(10);
                 boolean tt = rs.getBoolean(11);
-                Model.Model_HoaDon hd = new Model_HoaDon(maHD, maKH, tenKH, sdt, id_NV, ngaythanhtoan, maVoucher, tongtienBD, tongKM, tongtiensauKM, tt);
+                Model.Model_HoaDon hd = new Model_HoaDon(maHD, maKH, tenKH, sdt, id_NV, ngaythanhtoan, maVoucher, tongtienBD, tongKM, tongtiensauKM, tt, id_HD);
                 list_HD.add(hd);
             }
             return list_HD;

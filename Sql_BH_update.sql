@@ -235,6 +235,7 @@ delete from HoaDon where mahoadon = ?
 
 
 -- Thay doi cua Hien
-
+ALTER TABLE NhanVien
+ADD trangThai BIT;
 
 -- Thay doi cua Linh

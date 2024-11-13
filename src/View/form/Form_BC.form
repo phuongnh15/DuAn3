@@ -187,27 +187,27 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Component id="jLabel1" min="-2" pref="231" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="132" max="-2" attributes="0"/>
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                                   <Component id="cbo_ngayThang" min="-2" pref="140" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                                  <Component id="jcalen_Thang" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="cbo_sapxep" min="-2" pref="203" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="btn_Loc" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="374" max="-2" attributes="0"/>
+                                  <Component id="Jcalender_Nam" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="257" max="32767" attributes="0"/>
-                          <Component id="jcalen_Thang" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="Jcalender_Nam" min="-2" pref="86" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                          <EmptySpace min="15" pref="329" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
@@ -224,19 +224,20 @@
                                   <Component id="jLabel1" min="-2" pref="34" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbo_ngayThang" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jcalen_Thang" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbo_ngayThang" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbo_sapxep" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="btn_Loc" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jcalen_Thang" min="-2" max="-2" attributes="0"/>
-                                      <Component id="Jcalender_Nam" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbo_sapxep" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btn_Loc" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="Jcalender_Nam" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -328,8 +329,6 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="com.toedter.calendar.JMonthChooser" name="jcalen_Thang">
-                </Component>
                 <Component class="javax.swing.JComboBox" name="cbo_ngayThang">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -343,8 +342,6 @@
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
                 </Component>
-                <Component class="com.toedter.calendar.JYearChooser" name="Jcalender_Nam">
-                </Component>
                 <Component class="javax.swing.JButton" name="btn_Loc">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="L&#x1ecd;c"/>
@@ -352,6 +349,10 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_LocActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="com.toedter.calendar.JMonthChooser" name="jcalen_Thang">
+                </Component>
+                <Component class="com.toedter.calendar.JYearChooser" name="Jcalender_Nam">
                 </Component>
               </SubComponents>
             </Container>
@@ -423,7 +424,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jPanel7" max="32767" attributes="0"/>
-                                      <Component id="jPanel8" pref="142" max="32767" attributes="0"/>
+                                      <Component id="jPanel8" pref="150" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>

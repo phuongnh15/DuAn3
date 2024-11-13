@@ -12,7 +12,9 @@ import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -41,18 +43,43 @@ public class Form_HoaDon extends javax.swing.JPanel {
     }
 
     void fillTable(ArrayList<Model.Model_HoaDon> list) {
+        Locale locale = new Locale("vi", "VN");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+        
         model = (DefaultTableModel) tbl_DSHD.getModel();
         model.setRowCount(0);
         for (Model_HoaDon model_HoaDon : list) {
-            model.addRow(model_HoaDon.ToDataRow());
+            String formatGia = currencyFormatter.format(model_HoaDon.getTongKM());
+            formatGia = formatGia.substring(0, formatGia.length() - 1) + "VND";
+            
+            String formatGia1 = currencyFormatter.format(model_HoaDon.getTongtienBD());
+            formatGia1 = formatGia1.substring(0, formatGia1.length() - 1) + "VND";
+            
+            String formatGia2 = currencyFormatter.format(model_HoaDon.getTongtiensauKM());
+            formatGia2 = formatGia2.substring(0, formatGia2.length() - 1) + "VND";
+            
+            model.addRow(new Object[] {
+                model_HoaDon.getId_HD(),model_HoaDon.getMaHD(), model_HoaDon.getMaKH(), model_HoaDon.getTenKH(), model_HoaDon.getSdt(), model_HoaDon.getId_NV(),
+                model_HoaDon.getNgaythanhtoan(), formatGia1, formatGia, model_HoaDon.getMaVoucher(),
+                formatGia2, model_HoaDon.isTrangthai()
+            });
         }
     }
 
     void fillTable1(ArrayList<Model.Model_HDCT> list) {
+        Locale locale = new Locale("vi", "VN");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
         model = (DefaultTableModel) tbl_hoadonChiTiet.getModel();
         model.setRowCount(0);
         for (Model_HDCT model_HDCT : list) {
-            model.addRow(model_HDCT.ToDataRow());
+            
+            String formatGia = currencyFormatter.format(model_HDCT.getDongia());
+            formatGia = formatGia.substring(0, formatGia.length() - 1) + "VND";
+            
+            model.addRow(new Object[] {
+                model_HDCT.getMaHDCT(), model_HDCT.getMaHD(), model_HDCT.getMaSP(),model_HDCT.getImei(),
+                formatGia, model_HDCT.getSolg()
+            });
         }
     }
 
@@ -141,13 +168,13 @@ public class Form_HoaDon extends javax.swing.JPanel {
 
         tbl_DSHD.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã HD", "Mã KH", "Tên KH", "SĐT", "Id_NV", "Ngày thanh toán", "Tổng tiền BĐ", "Tổng tiền KM", "Mã Voucher", "Tổng tiền sau KM", "Trạng thái"
+                "ID", "Mã HD", "Mã KH", "Tên KH", "SĐT", "Id_NV", "Ngày thanh toán", "Tổng tiền BĐ", "Tổng tiền KM", "Mã Voucher", "Tổng tiền sau KM", "Trạng thái"
             }
         ));
         tbl_DSHD.addMouseListener(new java.awt.event.MouseAdapter() {
